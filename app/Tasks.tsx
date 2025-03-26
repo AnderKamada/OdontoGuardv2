@@ -24,7 +24,7 @@ export default function TasksScreen() {
       setTasks(response.data);
     } catch (error) {
       console.error('Erro ao carregar tarefas:', error);
-      router.push('/error');
+      router.push('/erro');
     }
   };
 
@@ -39,7 +39,7 @@ export default function TasksScreen() {
       setNewTask('');
     } catch (error) {
       console.error('Erro ao adicionar tarefa:', error);
-      router.push('/error');
+      router.push('/erro');
     }
   };
 
@@ -49,7 +49,7 @@ export default function TasksScreen() {
       setTasks(tasks.filter((task) => task.id !== id));
     } catch (error) {
       console.error('Erro ao deletar tarefa:', error);
-      router.push('/error');
+      router.push('/erro');
     }
   };
 

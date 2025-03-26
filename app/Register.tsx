@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
 
 export default function RegisterScreen() {
+  const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,6 +19,7 @@ export default function RegisterScreen() {
     await AsyncStorage.setItem('user', JSON.stringify(user));
 
     Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
+    router.replace('/Login');
     setName('');
     setEmail('');
     setPassword('');

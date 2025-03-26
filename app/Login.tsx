@@ -1,19 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useRouter } from 'expo-router';
 
-type RootStackParamList = {
-  Login: undefined;
-  Home: undefined;
-};
-
-type Props = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
-};
-
-export default function LoginScreen({ navigation }: Props) {
+export default function LoginScreen() {
   const [username, setUsername] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
     checkLogin();
@@ -22,14 +14,17 @@ export default function LoginScreen({ navigation }: Props) {
   const checkLogin = async () => {
     const storedUser = await AsyncStorage.getItem('@odontoGuard_user');
     if (storedUser) {
-      navigation.replace('Home');
+      router.replace('/Home');
     }
   };
 
   const handleLogin = async () => {
-    if (username.trim() === '') return;
+    if (username.trim() === '') {
+      Alert.alert('Erro', 'Por favor, digite seu nome.');
+      return;
+    }
     await AsyncStorage.setItem('@odontoGuard_user', username);
-    navigation.replace('Home');
+    router.replace('/Home');
   };
 
   return (

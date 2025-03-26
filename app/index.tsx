@@ -9,7 +9,7 @@ export default function LoginScreen() {
 
   useEffect(() => {
     const checkLogin = async () => {
-      const user = await AsyncStorage.getItem('user');
+      const user = await AsyncStorage.getItem('@odontoGuard_user');
       if (user) {
         router.replace('/Home'); 
       }
@@ -23,7 +23,7 @@ export default function LoginScreen() {
       return;
     }
 
-    await AsyncStorage.setItem('user', username);
+    await AsyncStorage.setItem('@odontoGuard_user', username);
     router.replace('/Home'); 
   };
 
