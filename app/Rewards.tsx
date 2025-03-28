@@ -1,38 +1,90 @@
-import { View, Text, FlatList, StyleSheet } from 'react-native';
-
-const rewards = [
-  { id: '1', title: 'Recompensa 1', description: 'Ganhe 10% de desconto no dentista' },
-  { id: '2', title: 'Recompensa 2', description: 'Uma limpeza gratuita após 5 tarefas' },
-  { id: '3', title: 'Recompensa 3', description: 'Consultoria online com especialista' },
-];
+import React from 'react';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import FooterLogout from '../app/FooterLogout';
 
 export default function RewardsScreen() {
+  const rewards = [
+    {
+      icon: '🪥',
+      title: 'Primeira Limpeza',
+      description: 'Você concluiu sua primeira tarefa!',
+    },
+    {
+      icon: '📤',
+      title: 'Protetor dos Dentes',
+      description: 'Você enviou uma imagem da sua rotina!',
+    },
+    {
+      icon: '💬',
+      title: 'Paciente Consciente',
+      description: 'Você enviou seu primeiro feedback!',
+    },
+    {
+      icon: '🧼',
+      title: 'Comprometido com a Saúde',
+      description: 'Você completou 5 tarefas no app!',
+    },
+  ];
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Recompensas</Text>
-      <FlatList
-        data={rewards}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.reward}>
-            <Text style={styles.rewardTitle}>{item.title}</Text>
-            <Text>{item.description}</Text>
+      <Text style={styles.title}>🎁 Suas Recompensas</Text>
+
+      <ScrollView contentContainerStyle={styles.scroll}>
+        {rewards.map((reward, index) => (
+          <View key={index} style={styles.card}>
+            <Text style={styles.emoji}>{reward.icon}</Text>
+            <Text style={styles.cardTitle}>{reward.title}</Text>
+            <Text style={styles.cardDesc}>{reward.description}</Text>
           </View>
-        )}
-      />
+        ))}
+      </ScrollView>
+
+      <FooterLogout />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 20, flex: 1, backgroundColor: '#fff' },
-  title: { fontSize: 24, marginBottom: 20, fontWeight: 'bold', textAlign: 'center' },
-  reward: {
-    padding: 16,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderRadius: 8,
-    backgroundColor: '#f2f2f2',
+  container: {
+    flex: 1,
+    paddingTop: 60,
+    paddingHorizontal: 20,
+    paddingBottom: 100,
+    backgroundColor: '#fff',
   },
-  rewardTitle: { fontSize: 18, fontWeight: '600' },
+  title: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  scroll: {
+    paddingBottom: 20,
+  },
+  card: {
+    backgroundColor: '#f0f0f0',
+    padding: 18,
+    borderRadius: 12,
+    marginBottom: 16,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 2,
+  },
+  emoji: {
+    fontSize: 36,
+    marginBottom: 8,
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  cardDesc: {
+    fontSize: 14,
+    color: '#555',
+    textAlign: 'center',
+  },
 });

@@ -1,65 +1,50 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
+import FooterLogout from '../app/FooterLogout'; 
 
 export default function RegisterScreen() {
-  const router = useRouter();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
 
   const handleRegister = async () => {
-    if (!name || !email || !password) {
-      Alert.alert('Erro', 'Preencha todos os campos.');
+    if (username.trim() === '' || password.trim() === '') {
+      Alert.alert('Erro', 'Preencha todos os campos');
       return;
     }
 
-    const user = { name, email, password };
-    await AsyncStorage.setItem('user', JSON.stringify(user));
+    const user = { username, password };
+    await AsyncStorage.setItem('@odontoGuard_registered_user', JSON.stringify(user));
 
-    Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
-    router.replace('/Login');
-    setName('');
-    setEmail('');
-    setPassword('');
+    Alert.alert('Sucesso', 'Usuário cadastrado com sucesso!');
+    router.replace('/');
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Cadastro</Text>
-
       <TextInput
         style={styles.input}
-        placeholder="Nome completo"
-        value={name}
-        onChangeText={setName}
+        placeholder="Digite seu nome"
+        value={username}
+        onChangeText={setUsername}
       />
       <TextInput
         style={styles.input}
-        placeholder="E-mail"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Senha"
+        placeholder="Digite sua senha"
+        secureTextEntry
         value={password}
         onChangeText={setPassword}
-        secureTextEntry
       />
-
       <Button title="Cadastrar" onPress={handleRegister} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, justifyContent: 'center' },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20, textAlign: 'center' },
-  input: {
-    borderWidth: 1, borderColor: '#ccc', borderRadius: 5,
-    padding: 10, marginBottom: 15
-  }
+  container: { flex: 1, justifyContent: 'center', padding: 20 },
+  title: { fontSize: 24, marginBottom: 20, textAlign: 'center' },
+  input: { borderWidth: 1, padding: 10, marginBottom: 10, borderRadius: 5 },
 });
