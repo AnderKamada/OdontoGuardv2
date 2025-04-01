@@ -1,14 +1,12 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 
 export default function IndexScreen() {
   const router = useRouter();
 
-  const handleLogin = async () => {
-    await AsyncStorage.setItem('@odontoGuard_user', 'true');
-    router.push('/Home');
+  const handleLogin = () => {
+    router.push('/Login'); // agora redireciona corretamente para a tela de login
   };
 
   const handleRegister = () => {
@@ -19,7 +17,7 @@ export default function IndexScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Bem-vindo ao OdontoGuard</Text>
       <View style={styles.button}>
-        <Button title="Entrar" onPress={handleLogin} />
+        <Button title="Login" onPress={handleLogin} />
       </View>
       <View style={styles.button}>
         <Button title="Cadastrar" onPress={handleRegister} />
@@ -39,10 +37,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 40,
+    marginBottom: 20,
   },
   button: {
-    width: '70%',
-    marginVertical: 10,
+    width: '80%',
+    marginBottom: 10,
   },
 });

@@ -8,6 +8,7 @@ import {
   Alert,
   StyleSheet,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import api from '../src/services/api';
 import { useRouter } from 'expo-router';
@@ -27,6 +28,7 @@ export default function TasksScreen() {
   const [description, setDescription] = useState('');
   const [editMode, setEditMode] = useState(false);
   const [editTaskId, setEditTaskId] = useState<string | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -80,9 +82,25 @@ export default function TasksScreen() {
     try {
       await api.delete(`/tasks/${id}`);
       setTasks(tasks.filter((task) => task.id !== id));
+      setConfirmDeleteId(null);
     } catch (error) {
       console.error('Erro ao excluir tarefa:', error);
       router.push('/erro');
+    }
+  };
+
+  const confirmDeleteTask = (id: string) => {
+    if (Platform.OS !== 'web') {
+      Alert.alert(
+        'Confirmar Exclusão',
+        'Você tem certeza que deseja excluir esta tarefa?',
+        [
+          { text: 'Cancelar', style: 'cancel' },
+          { text: 'Excluir', style: 'destructive', onPress: () => deleteTask(id) },
+        ]
+      );
+    } else {
+      setConfirmDeleteId(id);
     }
   };
 
@@ -138,12 +156,29 @@ export default function TasksScreen() {
               >
                 <Text style={styles.buttonText}>✏️</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.button, styles.deleteButton]}
-                onPress={() => deleteTask(item.id)}
-              >
-                <Text style={styles.buttonText}>❌</Text>
-              </TouchableOpacity>
+              {confirmDeleteId === item.id ? (
+                <>
+                  <TouchableOpacity
+                    style={[styles.button, styles.deleteButton]}
+                    onPress={() => deleteTask(item.id)}
+                  >
+                    <Text style={styles.buttonText}>Confirmar ❌</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.button, { backgroundColor: '#999' }]}
+                    onPress={() => setConfirmDeleteId(null)}
+                  >
+                    <Text style={styles.buttonText}>Cancelar</Text>
+                  </TouchableOpacity>
+                </>
+              ) : (
+                <TouchableOpacity
+                  style={[styles.button, styles.deleteButton]}
+                  onPress={() => confirmDeleteTask(item.id)}
+                >
+                  <Text style={styles.buttonText}>❌</Text>
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         )}

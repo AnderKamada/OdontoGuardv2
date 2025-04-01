@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Alert,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
@@ -17,6 +18,7 @@ import FooterLogout from '../app/FooterLogout';
 export default function UploadScreen() {
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [message, setMessage] = useState('');
 
   const escolherImagem = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -33,6 +35,7 @@ export default function UploadScreen() {
 
     if (!result.canceled && result.assets.length > 0) {
       setImageUri(result.assets[0].uri);
+      setMessage('');
     }
   };
 
@@ -50,7 +53,12 @@ export default function UploadScreen() {
       await uploadBytes(imageRef, blob);
       const downloadURL = await getDownloadURL(imageRef);
 
-      Alert.alert('Imagem enviada com sucesso!', `URL: ${downloadURL}`);
+      const msg = 'Upload concluído com sucesso';
+      if (Platform.OS === 'web') {
+        setMessage(msg);
+      } else {
+        Alert.alert('Imagem enviada com sucesso!', `URL: ${downloadURL}`);
+      }
     } catch (error) {
       console.error(error);
       Alert.alert('Erro', 'Erro ao enviar imagem para o Firebase.');
@@ -63,6 +71,10 @@ export default function UploadScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Upload de Imagem</Text>
       <Text style={styles.description}>Escolha uma imagem da sua galeria:</Text>
+
+      {Platform.OS === 'web' && message !== '' && (
+        <Text style={styles.webMessage}>{message}</Text>
+      )}
 
       <View style={styles.buttonWrapper}>
         <Button title="Escolher Imagem" onPress={escolherImagem} />
@@ -118,5 +130,10 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginTop: 20,
     resizeMode: 'cover',
+  },
+  webMessage: {
+    color: '#007BFF',
+    marginBottom: 10,
+    fontWeight: 'bold',
   },
 });
