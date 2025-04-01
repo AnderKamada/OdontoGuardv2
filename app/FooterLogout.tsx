@@ -1,36 +1,17 @@
-import { View, Button, StyleSheet, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, Button, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 
 export default function FooterLogout() {
   const router = useRouter();
 
-  const handleLogout = () => {
-    Alert.alert('Sair', 'Tem certeza que deseja sair?', [
-      {
-        text: 'Cancelar',
-        style: 'cancel',
-      },
-      {
-        text: 'Sair',
-        style: 'destructive',
-        onPress: async () => {
-          try {
-            await AsyncStorage.removeItem('@odontoGuard_user');
-            router.push('/');
-          } catch (error) {
-            Alert.alert('Erro', 'Não foi possível sair.');
-            console.error(error);
-          }
-        },
-      },
-    ]);
+  const handleBack = () => {
+    router.back(); // 🔙 Volta para a tela anterior
   };
 
   return (
     <View style={styles.footer}>
       <View style={styles.buttonWrapper}>
-        <Button title="Sair" color="#F44336" onPress={handleLogout} />
+        <Button title="Voltar" color="#F44336" onPress={handleBack} />
       </View>
     </View>
   );

@@ -1,53 +1,19 @@
-import React, { useCallback, useState } from 'react';
-import { View, Text, Button, StyleSheet, ActivityIndicator } from 'react-native';
+import React from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRouter, useFocusEffect } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 export default function IndexScreen() {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-
-  useFocusEffect(
-    useCallback(() => {
-      let isActive = true;
-
-      const checkLogin = async () => {
-        try {
-          const user = await AsyncStorage.getItem('@odontoGuard_user');
-          if (user && isActive) {
-            router.replace('/Home');
-          } else {
-            setLoading(false);
-          }
-        } catch (error) {
-          console.error('Erro ao verificar login:', error);
-        }
-
-        return () => {
-          isActive = false;
-        };
-      };
-
-      checkLogin();
-    }, [router])
-  );
 
   const handleLogin = async () => {
     await AsyncStorage.setItem('@odontoGuard_user', 'true');
-    router.replace('/Home');
+    router.push('/Home');
   };
 
   const handleRegister = () => {
     router.push('/Register');
   };
-
-  if (loading) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#007AFF" />
-      </View>
-    );
-  }
 
   return (
     <View style={styles.container}>
